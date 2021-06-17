@@ -1,0 +1,49 @@
+ data = sqlContext.createDataFrame([("Alberto", 2), ("Dakota", 2)],["Name", "askdaosdka"])
+ data.show()
+ data.printSchema()
+ # Output
+ #+-------+----------+
+ #|   Name|askdaosdka|
+ #+-------+----------+
+ #|Alberto|         2|
+ #| Dakota|         2|
+ #+-------+----------+
+ #root
+ # |-- Name: string (nullable = true)
+ # |-- askdaosdka: long (nullable = true)
+ 
+ 
+ df = data.selectExpr("Name as name", "askdaosdka as age")
+ df.show()
+ df.printSchema()
+ # Output
+ #+-------+---+
+ #|   name|age|
+ #+-------+---+
+ #|Alberto|  2|
+ #| Dakota|  2|
+ #+-------+---+
+ #root
+ # |-- name: string (nullable = true)
+ # |-- age: long (nullable = true)
+ 
+ 
+ from functools import reduce
+ oldColumns = data.schema.names
+ newColumns = ["name", "age"]
+ df = reduce(lambda data, idx: data.withColumnRenamed(oldColumns[idx], newColumns[idx]), xrange(len(oldColumns)), data)
+ df.printSchema()
+ df.show()
+ 
+
+ from pyspark.sql.functions import col
+ data = data.select(col("Name").alias("name"), col("askdaosdka").alias("age"))
+ data.show()
+
+
+ sqlContext.registerDataFrameAsTable(data, "myTable")
+ df2 = sqlContext.sql("SELECT Name AS name, askdaosdka as age from myTable")
+ df2.show()
+ 
+ new_column_name_list= list(map(lambda x: x.replace(" ", "_"), df.columns))
+ df = df.toDF(*new_column_name_list)

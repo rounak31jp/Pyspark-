@@ -1,0 +1,27 @@
+df.where(col("<column_name>").isNull())
+df.where(col("<column_name>").isNotNull())
+
+if you want to simply drop NULL values you can use na.drop with subset argument
+df.na.drop(subset=["<column_name>"])
+
+df.filter(df.column.isNotNull()).count()
+
+# Approach - 1
+df.filter("value is not null").show()
+
+# Approach - 2
+df.filter(col("value").isNotNull()).show()
+
+# Approach - 3
+df.filter(df["value"].isNotNull()).show()
+
+# Approach - 4
+df.filter(df.value.isNotNull()).show()
+
+# Approach - 5
+df.na.drop(subset=["value"]).show()
+
+# Approach - 6
+df.dropna(subset=["value"]).show()
+
+# Note: You can also use where function instead of a filter.
